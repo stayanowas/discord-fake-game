@@ -1,8 +1,8 @@
 {
-  "version": "1.1.0",
-  "url": "https://github.com/stayanowas/orbshacker/releases/download/v1.1.0/DiscordFakeGame.exe",
-  "sha256": "231d963b62c506c534ea310da25c453e9ce57845bc1bc5360e914449efdd7053",
-  "signature": "iYNGSzM9_uC2nyEkNpy52ysuMuuXbdU2JcuUL3UNA8fa8NjmtCPiVdXaChEjHZRDfc6ljilURFdSGk9mEcsMDA",
-  "notes": "Logo, ecran de lancement anime, interface FR/EN, fenetre d'activation redessinee",
+  "version": "1.2.0",
+  "url": "https://github.com/stayanowas/orbshacker/releases/download/v1.2.0/DiscordFakeGame.exe",
+  "sha256": "d788712665d583d4bfd436763358156d4342021bbbd801a9dbefdcdb1141eee5",
+  "signature": "GEoUfQZuvFP4EH7gZjQRtQKw_oYenWq_LEmT21Yo2Lh0ZBPCCmrET7YPxhTk4dXzwex85Fvg-t2cb7WdMoNSDQ",
+  "notes": "Lancement de plusieurs jeux en meme temps (jusqu'a 6), selection multiple dans la liste",
   "published": "2026-11-19"
 }
