@@ -1,8 +1,8 @@
 {
-  "version": "1.4.0",
-  "url": "https://github.com/stayanowas/discord-fake-game-for-orbs/releases/download/v1.4.0/DiscordFakeGame.exe",
-  "sha256": "f4fbffa1612ec7e81914ff65e8b814fbfaed23a6d42f90cec4280780e006bbd4",
-  "signature": "HCrC9oaeij0dOS5I-UGU88Fe21haUpVLCRNDAXUYBbMHVTi9daig9eR6HJWvBDY1QwHmYuMMncp9tegethmhCg",
-  "notes": "Suivi des quetes Orbs : progression, arret automatique a 100%, webhook de notification",
+  "version": "1.5.0",
+  "url": "https://github.com/stayanowas/discord-fake-game-for-orbs/releases/download/v1.5.0/DiscordFakeGame.exe",
+  "sha256": "3f0dda9e982033fba25267d8a6949db1b62c75b28bd5f6120a08d60ec03a614f",
+  "signature": "8PuUO5J4crcjXRouxvXTfci97JnBJ1U0SFqlb8-zSS9sKhkFw-zIZa0Sl1fyQBBCgYkZs0x161LSEYhuBtIFDw",
+  "notes": "Tableau de bord des quetes : profil, cartes de stats, tableau et file d'attente",
   "published": "2026-11-19"
 }
