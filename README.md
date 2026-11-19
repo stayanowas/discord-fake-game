@@ -43,14 +43,6 @@ l'activité → « Afficher l'activité de jeu actuelle »** doit être activé.
 - Diagnostic intégré : lit les journaux de Discord et affiche ce qu'il a
   réellement détecté.
 - **Mises à jour automatiques** signées (SHA-256 + Ed25519).
-- **Suivi des quêtes Orbs** : bouton « 🏆 Quêtes », une quête = un jeu + une
-  durée à atteindre. Le jeu se lance, la progression avance, le processus
-  s'arrête tout seul à 100 %.
-- **Webhook Discord optionnel** : notification à chaque quête terminée.
-
-> ℹ️ Discord n'expose aucune API publique pour le solde d'orbs, la liste des
-> quêtes ou l'échéance Nitro : ces valeurs se saisissent à la main. Le lancement
-> des jeux et le calcul de progression, eux, sont réels.
 
 ### Mises à jour
 
@@ -92,14 +84,6 @@ activity as a status message”** must be enabled.
 - Animated splash screen and app logo.
 - Built-in diagnostics: reads Discord's logs and shows what it actually detected.
 - **Signed automatic updates** (SHA-256 + Ed25519).
-- **Orbs quest tracking**: “🏆 Quests” button, one quest = one game + a target
-  duration. The game starts, progress advances, the process stops by itself at
-  100%.
-- **Optional Discord webhook**: notification each time a quest completes.
-
-> ℹ️ Discord exposes no public API for the orb balance, quest list or Nitro
-> expiry: these values are entered manually. Game launching and progress
-> tracking are real.
 
 ### Updates
 
