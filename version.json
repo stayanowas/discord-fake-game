@@ -1,8 +1,8 @@
 {
-  "version": "1.5.0",
-  "url": "https://github.com/stayanowas/discord-fake-game-for-orbs/releases/download/v1.5.0/DiscordFakeGame.exe",
-  "sha256": "3f0dda9e982033fba25267d8a6949db1b62c75b28bd5f6120a08d60ec03a614f",
-  "signature": "8PuUO5J4crcjXRouxvXTfci97JnBJ1U0SFqlb8-zSS9sKhkFw-zIZa0Sl1fyQBBCgYkZs0x161LSEYhuBtIFDw",
-  "notes": "Tableau de bord des quetes : profil, cartes de stats, tableau et file d'attente",
+  "version": "1.5.1",
+  "url": "https://github.com/stayanowas/discord-fake-game-for-orbs/releases/download/v1.5.1/DiscordFakeGame.exe",
+  "sha256": "a2754646b3aba3471c607dc0f116807e263c623b97d1575cf929225278f628a6",
+  "signature": "ZR4ybBn9MDLIgXYXNytk20MrR-9SsDGS0qUMXvTRCdkY0FPCmmZFPeVTXoIA2kPYVJG7J0AICx5Kcx0YcotdCg",
+  "notes": "Positions dans la file, etat Reclamee",
   "published": "2026-11-19"
 }
