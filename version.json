@@ -1,8 +1,8 @@
 {
-  "version": "1.2.1",
-  "url": "https://github.com/stayanowas/orbshacker/releases/download/v1.2.1/DiscordFakeGame.exe",
-  "sha256": "a1fcd010d76297d908dc10d90810c942c81d44ad6ccdc0dbfe44e29bc26850b0",
-  "signature": "EBr5hOl-OGqdpDAYfqYIuXhw_WuhjtRNzgpOUJFblNuDuSdz5BXV_V-MhNs0i93cXtWZYWHYVNBkpic-QzonDw",
-  "notes": "Selection multiple au clic simple : un clic ajoute un jeu, un second le retire",
+  "version": "1.3.0",
+  "url": "https://github.com/stayanowas/orbshacker/releases/download/v1.3.0/DiscordFakeGame.exe",
+  "sha256": "37f44411fe11a18673e2b5a6dc016479636b5b055f6df22b8af09804e1811a8a",
+  "signature": "r31oIYpvJLX7uv4EYxgNJkLxWgzSogtpcCleBJ_wVen4fx8S_k06Qn_GMQ3ZWzCZjC0-KC05n7Y0rSS_UgyvAg",
+  "notes": "Application gratuite : plus aucune cle de licence.",
   "published": "2026-11-19"
 }
