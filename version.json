@@ -1,8 +1,8 @@
 {
-  "version": "1.0.0",
-  "url": "https://github.com/stayanowas/orbshacker/releases/download/v1.0.0/DiscordFakeGame.exe",
-  "sha256": "858b683fa063ae3594667386c6632d62428cd78487f24d538282d883c710a25f",
-  "signature": "cDNhKUYLxMwwC53Fm6rWYvz9bisvW5SBmMBB0mmuGSooR2LjsYFhhxpfgnq7JlLmdsJqzJMl746S4Wlyc9EwAg",
-  "notes": "Premiere version avec licences et mises a jour",
+  "version": "1.1.0",
+  "url": "https://github.com/stayanowas/orbshacker/releases/download/v1.1.0/DiscordFakeGame.exe",
+  "sha256": "067ddbec960a4299aa2fae022d0d0e77127deff3584aeb3222e220bf45b93eb0",
+  "signature": "ptrFdJEh674FNLvmxgYYvp3V4ucdglH3sSY6EIbES3iYCnQRz7yIw8_Pq8ljUUSyx_wX6HYdOp-3hDEDJ7TgAg",
+  "notes": "Logo, ecran de lancement anime, interface FR/EN, fenetre d'activation redessinee",
   "published": "2026-11-19"
 }
