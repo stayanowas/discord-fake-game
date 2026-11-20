@@ -1,0 +1,520 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Orbs — Discord Activity Studio</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body class="accent-blurple">
+
+<!-- ─────────────────────────── Icônes ─────────────────────────── -->
+<svg class="sprite" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+  <symbol id="i-home" viewBox="0 0 24 24"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V20a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1V9.5"/></symbol>
+  <symbol id="i-grid" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/></symbol>
+  <symbol id="i-star" viewBox="0 0 24 24"><path d="m12 3 2.7 5.6 6.1.9-4.4 4.3 1 6.1-5.4-2.9-5.4 2.9 1-6.1L3.2 9.5l6.1-.9Z"/></symbol>
+  <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+  <symbol id="i-sparkles" viewBox="0 0 24 24"><path d="M12 3v4M12 17v4M3 12h4M17 12h4M6.3 6.3l2.8 2.8M14.9 14.9l2.8 2.8M17.7 6.3l-2.8 2.8M9.1 14.9l-2.8 2.8"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+  <symbol id="i-activity" viewBox="0 0 24 24"><path d="M3 12h4l3 8 4-16 3 8h4"/></symbol>
+  <symbol id="i-settings" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.6 1.6 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.6 1.6 0 0 0-1.8-.3 1.6 1.6 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1A1.6 1.6 0 0 0 9 19.4a1.6 1.6 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.6 1.6 0 0 0 .3-1.8 1.6 1.6 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1A1.6 1.6 0 0 0 4.6 9a1.6 1.6 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.6 1.6 0 0 0 1.8.3H9a1.6 1.6 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.6 1.6 0 0 0 1 1.5 1.6 1.6 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.6 1.6 0 0 0-.3 1.8V9a1.6 1.6 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.6 1.6 0 0 0-1.5 1Z"/></symbol>
+  <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></symbol>
+  <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></symbol>
+  <symbol id="i-close" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></symbol>
+  <symbol id="i-min" viewBox="0 0 24 24"><path d="M5 12h14"/></symbol>
+  <symbol id="i-max" viewBox="0 0 24 24"><rect x="5" y="5" width="14" height="14" rx="1.5"/></symbol>
+  <symbol id="i-restore" viewBox="0 0 24 24"><rect x="8" y="4" width="12" height="12" rx="1.5"/><path d="M16 16v3a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-9a1 1 0 0 1 1-1h3"/></symbol>
+  <symbol id="i-play" viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5Z"/></symbol>
+  <symbol id="i-stop" viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="2"/></symbol>
+  <symbol id="i-refresh" viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-2.6-6.4"/><path d="M21 4v5h-5"/></symbol>
+  <symbol id="i-external" viewBox="0 0 24 24"><path d="M14 4h6v6M20 4 11 13"/><path d="M19 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h5"/></symbol>
+  <symbol id="i-copy" viewBox="0 0 24 24"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v1"/></symbol>
+  <symbol id="i-folder" viewBox="0 0 24 24"><path d="M3 7a1 1 0 0 1 1-1h5l2 2h8a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1Z"/></symbol>
+  <symbol id="i-chevron" viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 13 4 4L19 7"/></symbol>
+  <symbol id="i-zap" viewBox="0 0 24 24"><path d="M13 2 4 14h6l-1 8 9-12h-6Z"/></symbol>
+  <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3 5 6v5c0 5 3 8 7 10 4-2 7-5 7-10V6Z"/><path d="m9 12 2 2 4-4"/></symbol>
+  <symbol id="i-cpu" viewBox="0 0 24 24"><rect x="7" y="7" width="10" height="10" rx="2"/><path d="M4 10h3M4 14h3M17 10h3M17 14h3M10 4v3M14 4v3M10 17v3M14 17v3"/></symbol>
+  <symbol id="i-trash" viewBox="0 0 24 24"><path d="M4 7h16M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2M6 7l1 13a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1l1-13"/></symbol>
+  <symbol id="i-discord" viewBox="0 0 24 24"><path d="M8.5 8.5c2.3-.9 4.7-.9 7 0M8.5 15.5c2.3.9 4.7.9 7 0"/><path d="M6.5 5.5C9 4.5 15 4.5 17.5 5.5c1.7 3 2.2 6.3 2 9.6-1.4 1-3 1.6-4.6 1.9l-.9-1.6c-1.3.3-2.7.3-4 0L9.1 17c-1.6-.3-3.2-.9-4.6-1.9-.2-3.3.3-6.6 2-9.6Z"/></symbol>
+  <symbol id="i-scroll" viewBox="0 0 24 24"><path d="M12 4v16M6 10l6 6 6-6"/></symbol>
+</svg>
+
+<!-- ─────────────────────────── Boot ─────────────────────────── -->
+<div id="boot" class="boot">
+  <div class="boot-bg"></div>
+  <div class="boot-inner">
+    <div class="boot-logo">
+      <img class="logo-mark logo-mark--boot" src="assets/orbs-logo.png" alt="" aria-hidden="true">
+    </div>
+    <h1 class="boot-title">Orbs</h1>
+    <p class="boot-sub">Discord Activity Studio</p>
+    <div class="boot-bar"><div class="boot-fill" id="bootFill"></div></div>
+    <p class="boot-status" id="bootStatus">Initialisation…</p>
+  </div>
+</div>
+
+<!-- ─────────────────────────── Application ─────────────────────────── -->
+<div class="shell hidden" id="shell">
+
+  <!-- Barre de fenêtre -->
+  <header class="topbar">
+    <div class="drag-zone pywebview-drag-region">
+      <span class="topbar-brand">Orbs</span>
+      <span class="topbar-sep">/</span>
+      <span class="topbar-crumb" id="crumb">Accueil</span>
+    </div>
+    <div class="topbar-right">
+      <button class="conn-pill" id="connPill" title="Diagnostic Discord">
+        <span class="dot"></span><span id="connText">Discord…</span>
+      </button>
+      <div class="winbtns">
+        <button class="winbtn" data-win="minimize" aria-label="Réduire"><svg class="ico"><use href="#i-min"/></svg></button>
+        <button class="winbtn" data-win="maximize" aria-label="Agrandir"><svg class="ico"><use href="#i-max"/></svg></button>
+        <button class="winbtn winbtn--close" data-win="close" aria-label="Fermer"><svg class="ico"><use href="#i-close"/></svg></button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Barre latérale -->
+  <aside class="sidebar">
+    <div class="brand">
+      <img class="logo-mark logo-mark--brand" src="assets/orbs-logo.png" alt="" aria-hidden="true">
+      <div class="brand-text">
+        <div class="brand-name">Orbs <span class="tag" id="versionTag">v2.0</span></div>
+        <div class="brand-sub" data-i18n="brand.sub">Discord Activity Studio</div>
+      </div>
+    </div>
+
+    <button class="search-trigger" id="searchTrigger">
+      <svg class="ico"><use href="#i-search"/></svg>
+      <span data-i18n="search.trigger">Rechercher un jeu…</span>
+      <kbd>Ctrl K</kbd>
+    </button>
+
+    <nav class="nav" id="mainNav">
+      <button class="nav-item active" data-nav="home">
+        <svg class="ico"><use href="#i-home"/></svg><span data-i18n="nav.home">Accueil</span>
+      </button>
+      <button class="nav-item" data-nav="library">
+        <svg class="ico"><use href="#i-grid"/></svg><span data-i18n="nav.library">Bibliothèque</span>
+        <span class="badge" id="badgeLibrary">0</span>
+      </button>
+      <button class="nav-item" data-nav="favorites" data-tab="favorites">
+        <svg class="ico"><use href="#i-star"/></svg><span data-i18n="nav.favorites">Favoris</span>
+        <span class="badge" id="badgeFavorites">0</span>
+      </button>
+      <button class="nav-item" data-nav="library" data-tab="recents">
+        <svg class="ico"><use href="#i-clock"/></svg><span data-i18n="nav.recents">Récents</span>
+        <span class="badge" id="badgeRecents">0</span>
+      </button>
+      <button class="nav-item" data-nav="custom">
+        <svg class="ico"><use href="#i-sparkles"/></svg><span data-i18n="nav.custom">Personnalisé</span>
+        <span class="badge" id="badgePresets">0</span>
+      </button>
+    </nav>
+
+    <button class="add-custom" id="addCustom">
+      <span class="plus"><svg class="ico"><use href="#i-plus"/></svg></span>
+      <span data-i18n="nav.addPresence">Ajouter une présence</span>
+    </button>
+
+    <div class="side-label" data-i18n="nav.system">SYSTÈME</div>
+    <nav class="nav">
+      <button class="nav-item" data-nav="diagnostics">
+        <svg class="ico"><use href="#i-activity"/></svg><span data-i18n="nav.diagnostics">Diagnostic</span>
+      </button>
+      <button class="nav-item" data-nav="quests">
+        <svg class="ico"><use href="#i-sparkles"/></svg><span data-i18n="nav.quests">Quêtes Discord</span>
+      </button>
+      <button class="nav-item" data-nav="settings">
+        <svg class="ico"><use href="#i-settings"/></svg><span data-i18n="nav.settings">Réglages</span>
+      </button>
+      <button class="nav-item" data-nav="about">
+        <svg class="ico"><use href="#i-info"/></svg><span data-i18n="nav.about">À propos</span>
+      </button>
+    </nav>
+
+    <div class="side-foot">
+      <div class="discord-chip" id="discordChip">
+        <svg class="ico"><use href="#i-discord"/></svg>
+        <div>
+          <div class="dc-title" id="discordChipTitle">Discord</div>
+          <div class="dc-sub" id="discordChipSub">—</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Contenu -->
+  <main class="main" id="main">
+
+    <!-- ACCUEIL -->
+    <section class="view active" data-view="home">
+      <div class="hero">
+        <div class="hero-glow"></div>
+        <div class="hero-grid"></div>
+        <div class="hero-content">
+          <div class="eyebrow"><span class="pulse-dot"></span><span data-i18n="home.eyebrow">DISCORD ACTIVITY STUDIO</span></div>
+          <h1 class="hero-title" data-i18n="home.title">Fais croire que tu joues.</h1>
+          <p class="hero-sub" data-i18n="home.sub">Lance une activité Discord crédible en un clic : 25 000 jeux officiels, Rich Presence en temps réel, presets personnalisés et diagnostics intégrés.</p>
+          <div class="hero-pills" id="heroPills"></div>
+          <div class="hero-actions">
+            <button class="btn btn--primary" data-nav="library">
+              <svg class="ico"><use href="#i-grid"/></svg><span data-i18n="home.explore">Explorer la bibliothèque</span>
+            </button>
+            <button class="btn btn--ghost" data-nav="custom">
+              <svg class="ico"><use href="#i-sparkles"/></svg><span data-i18n="home.custom">Présence personnalisée</span>
+            </button>
+          </div>
+        </div>
+        <div class="hero-visual">
+          <img class="logo-mark logo-mark--hero" src="assets/orbs-logo.png" alt="" aria-hidden="true">
+          <div class="floating-card fc1"><span class="fc-dot"></span>Rich Presence</div>
+          <div class="floating-card fc2"><svg class="ico"><use href="#i-play"/></svg>En jeu</div>
+        </div>
+      </div>
+
+      <div id="nowPlaying"></div>
+
+      <div class="quick-grid">
+        <button class="quick quick--blue" data-nav="library">
+          <span class="quick-icon"><svg class="ico"><use href="#i-grid"/></svg></span>
+          <span class="quick-text">
+            <span class="quick-title" data-i18n="quick.library">Tous les jeux</span>
+            <span class="quick-sub" data-i18n="quick.librarySub">Parcourir le catalogue</span>
+          </span>
+        </button>
+        <button class="quick quick--teal" data-nav="custom">
+          <span class="quick-icon"><svg class="ico"><use href="#i-plus"/></svg></span>
+          <span class="quick-text">
+            <span class="quick-title" data-i18n="quick.custom">Jeu personnalisé</span>
+            <span class="quick-sub" data-i18n="quick.customSub">Ton propre ID et détails</span>
+          </span>
+        </button>
+        <button class="quick quick--violet" id="quickRefresh">
+          <span class="quick-icon"><svg class="ico"><use href="#i-refresh"/></svg></span>
+          <span class="quick-text">
+            <span class="quick-title" data-i18n="quick.refresh">Actualiser</span>
+            <span class="quick-sub" data-i18n="quick.refreshSub">Synchroniser le catalogue</span>
+          </span>
+        </button>
+        <button class="quick quick--amber" data-nav="diagnostics">
+          <span class="quick-icon"><svg class="ico"><use href="#i-activity"/></svg></span>
+          <span class="quick-text">
+            <span class="quick-title" data-i18n="quick.diag">Diagnostic</span>
+            <span class="quick-sub" data-i18n="quick.diagSub">Vérifier ce que Discord voit</span>
+          </span>
+        </button>
+      </div>
+
+      <div class="section-head">
+        <h2 data-i18n="home.recent">Joués récemment</h2>
+        <button class="link" data-nav="library" data-tab="recents" data-i18n="home.seeAll">Tout voir</button>
+      </div>
+      <div class="row-scroll" id="recentRow"></div>
+    </section>
+
+    <!-- BIBLIOTHÈQUE -->
+    <section class="view" data-view="library">
+      <div class="view-head">
+        <div>
+          <h1 data-i18n="library.title">Bibliothèque</h1>
+          <p data-i18n="library.sub">Les jeux officiellement détectés par Discord, avec leur présence associée.</p>
+        </div>
+        <div class="view-head-actions">
+          <button class="btn btn--subtle" id="refreshBtn">
+            <svg class="ico"><use href="#i-refresh"/></svg><span data-i18n="common.refresh">Actualiser</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="toolbar">
+        <label class="search-field">
+          <svg class="ico"><use href="#i-search"/></svg>
+          <input id="searchInput" type="text" autocomplete="off" spellcheck="false"
+                 data-i18n-ph="library.searchPh" placeholder="Rechercher un jeu, un exe, un alias…">
+          <button class="search-clear" id="searchClear" aria-label="Effacer"><svg class="ico"><use href="#i-close"/></svg></button>
+        </label>
+        <div class="tabs" id="tabs">
+          <button class="tab active" data-tab="all"><span data-i18n="library.tabAll">Tous</span><span class="tab-count" id="tabCountAll">0</span></button>
+          <button class="tab" data-tab="favorites"><span data-i18n="library.tabFav">Favoris</span><span class="tab-count" id="tabCountFav">0</span></button>
+          <button class="tab" data-tab="recents"><span data-i18n="library.tabRecent">Récents</span><span class="tab-count" id="tabCountRecent">0</span></button>
+        </div>
+      </div>
+
+      <div class="grid" id="grid"></div>
+      <div class="empty hidden" id="gridEmpty">
+        <div class="empty-icon"><svg class="ico"><use href="#i-search"/></svg></div>
+        <h3 data-i18n="library.emptyTitle">Aucun résultat</h3>
+        <p data-i18n="library.emptySub">Essaie un autre nom, un alias ou le nom de l'exécutable.</p>
+      </div>
+      <div class="load-more hidden" id="loadMore">
+        <span class="spinner"></span><span data-i18n="library.loading">Chargement…</span>
+      </div>
+    </section>
+
+    <!-- PERSONNALISÉ -->
+    <section class="view" data-view="custom">
+      <div class="view-head">
+        <div>
+          <h1 data-i18n="custom.title">Présence personnalisée</h1>
+          <p data-i18n="custom.sub">Choisis n'importe quelle application Discord (ID) et écris ce que tes amis verront.</p>
+        </div>
+      </div>
+
+      <div class="custom-layout">
+        <form class="panel form" id="customForm" autocomplete="off">
+          <div class="form-row">
+            <label class="field">
+              <span class="field-label" data-i18n="custom.appId">ID d'application Discord</span>
+              <input id="cAppId" inputmode="numeric" placeholder="356875221078245376" required>
+              <span class="field-hint" data-i18n="custom.appIdHint">L'ID détermine le nom et l'icône affichés par Discord.</span>
+            </label>
+            <label class="field">
+              <span class="field-label" data-i18n="custom.label">Nom du preset</span>
+              <input id="cName" placeholder="Overwatch — ranked">
+            </label>
+          </div>
+          <label class="field">
+            <span class="field-label" data-i18n="custom.details">Détails</span>
+            <input id="cDetails" maxlength="128" placeholder="En pleine partie">
+          </label>
+          <label class="field">
+            <span class="field-label" data-i18n="custom.state">État</span>
+            <input id="cState" maxlength="128" placeholder="Mode compétitif · Diamant">
+          </label>
+          <div class="form-row">
+            <label class="field">
+              <span class="field-label" data-i18n="custom.largeImage">Clé d'image (asset)</span>
+              <input id="cImage" placeholder="cover">
+              <span class="field-hint" data-i18n="custom.largeHint">Optionnel — doit exister dans ton application Discord.</span>
+            </label>
+            <label class="field">
+              <span class="field-label" data-i18n="custom.largeText">Texte de l'image</span>
+              <input id="cImageText" placeholder="Saison 12">
+            </label>
+          </div>
+          <div class="form-actions">
+            <button type="submit" class="btn btn--primary">
+              <svg class="ico"><use href="#i-play"/></svg><span data-i18n="custom.launch">Lancer la présence</span>
+            </button>
+            <button type="button" class="btn btn--ghost" id="savePreset">
+              <svg class="ico"><use href="#i-star"/></svg><span data-i18n="custom.save">Enregistrer le preset</span>
+            </button>
+          </div>
+        </form>
+
+        <aside class="panel preview-panel">
+          <div class="preview-label" data-i18n="custom.preview">APERÇU DU PROFIL</div>
+          <div class="dc-card">
+            <div class="dc-art" id="pvArt"><div class="pv-fallback">?</div></div>
+            <div class="dc-body">
+              <div class="dc-playing" data-i18n="custom.playing">JOUE À</div>
+              <div class="dc-name" id="pvName">Application</div>
+              <div class="dc-line" id="pvDetails">Détails</div>
+              <div class="dc-line" id="pvState"></div>
+              <div class="dc-time"><span class="pulse-dot sm"></span><span id="pvTime">00:00</span> <span data-i18n="custom.elapsed">écoulé</span></div>
+            </div>
+          </div>
+          <div class="preview-note">
+            <svg class="ico"><use href="#i-shield"/></svg>
+            <span data-i18n="custom.note">Le visuel vient de l'application Discord associée à l'ID.</span>
+          </div>
+        </aside>
+      </div>
+
+      <div class="section-head">
+        <h2 data-i18n="custom.presets">Mes presets</h2>
+      </div>
+      <div class="preset-grid" id="presetGrid"></div>
+    </section>
+
+    <!-- QUÊTES DISCORD -->
+    <section class="view" data-view="quests">
+      <div class="view-head">
+        <div>
+          <h1 data-i18n="quests.title">Quêtes Discord</h1>
+          <p data-i18n="quests.sub">Lecture seule de Quest Home dans l’application Discord ouverte.</p>
+        </div>
+        <div class="view-head-actions">
+          <button class="btn btn--subtle" id="questsRefresh"><svg class="ico"><use href="#i-refresh"/></svg><span data-i18n="common.refresh">Actualiser</span></button>
+        </div>
+      </div>
+      <div id="questsStatus" class="panel quests-status" data-i18n="quests.prompt">Ouvre Quest Home dans Discord, puis actualise.</div>
+      <div class="stat-grid quests-stats" id="questsStats"></div>
+      <div class="panel">
+        <div class="panel-head"><h3 data-i18n="quests.details">Détails des quêtes</h3></div>
+        <div class="detect-list" id="questsList"></div>
+      </div>
+      <p class="muted quests-note" data-i18n="quests.note">Orbs lit uniquement les textes accessibles visibles dans Quest Home. Il n’ouvre pas de page et ne lit aucun identifiant de connexion.</p>
+    </section>
+
+    <!-- DIAGNOSTIC -->
+    <section class="view" data-view="diagnostics">
+      <div class="view-head">
+        <div>
+          <h1 data-i18n="diag.title">Diagnostic</h1>
+          <p data-i18n="diag.sub">Ce que Discord voit réellement, lu dans ses journaux — rien n'est modifié.</p>
+        </div>
+        <div class="view-head-actions">
+          <button class="btn btn--subtle" id="diagRefresh"><svg class="ico"><use href="#i-refresh"/></svg><span data-i18n="common.refresh">Actualiser</span></button>
+          <button class="btn btn--ghost" id="diagCopy"><svg class="ico"><use href="#i-copy"/></svg><span data-i18n="diag.copy">Copier</span></button>
+        </div>
+      </div>
+
+      <div class="stat-grid" id="statGrid"></div>
+
+      <div class="panel">
+        <div class="panel-head">
+          <h3 data-i18n="diag.detections">Détections récentes</h3>
+          <span class="muted" id="diagEvents"></span>
+        </div>
+        <div class="detect-list" id="detectList"></div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head">
+          <h3 data-i18n="diag.report">Rapport complet</h3>
+          <span class="muted" data-i18n="diag.reportHint">Sélectionnable et copiable</span>
+        </div>
+        <pre class="report" id="diagReport"></pre>
+      </div>
+    </section>
+
+    <!-- RÉGLAGES -->
+    <section class="view" data-view="settings">
+      <div class="view-head">
+        <div>
+          <h1 data-i18n="settings.title">Réglages</h1>
+          <p data-i18n="settings.sub">Personnalise l'apparence et le comportement d'Orbs.</p>
+        </div>
+      </div>
+
+      <div class="panel settings-panel">
+        <h3 class="panel-title" data-i18n="settings.appearance">Apparence</h3>
+
+        <div class="setting-row">
+          <div class="setting-text">
+            <div class="setting-name" data-i18n="settings.lang">Langue</div>
+            <div class="setting-desc" data-i18n="settings.langDesc">Interface en français ou en anglais.</div>
+          </div>
+          <div class="segmented" id="langSeg">
+            <button data-lang="fr">Français</button>
+            <button data-lang="en">English</button>
+          </div>
+        </div>
+
+        <div class="setting-row">
+          <div class="setting-text">
+            <div class="setting-name" data-i18n="settings.accent">Couleur d'accent</div>
+            <div class="setting-desc" data-i18n="settings.accentDesc">Utilisée pour les boutons, halos et surbrillances.</div>
+          </div>
+          <div class="swatches" id="swatches">
+            <button class="swatch accent-blurple" data-accent="blurple" title="Blurple"></button>
+            <button class="swatch accent-violet" data-accent="violet" title="Violet"></button>
+            <button class="swatch accent-emerald" data-accent="emerald" title="Émeraude"></button>
+            <button class="swatch accent-rose" data-accent="rose" title="Rose"></button>
+            <button class="swatch accent-amber" data-accent="amber" title="Ambre"></button>
+          </div>
+        </div>
+
+        <div class="setting-row">
+          <div class="setting-text">
+            <div class="setting-name" data-i18n="settings.motion">Animations réduites</div>
+            <div class="setting-desc" data-i18n="settings.motionDesc">Désactive les halos et transitions animées.</div>
+          </div>
+          <label class="switch"><input type="checkbox" id="optMotion"><span></span></label>
+        </div>
+      </div>
+
+      <div class="panel settings-panel">
+        <h3 class="panel-title" data-i18n="settings.behaviour">Comportement</h3>
+
+        <div class="setting-row">
+          <div class="setting-text">
+            <div class="setting-name" data-i18n="settings.startup">Lancer avec Windows</div>
+            <div class="setting-desc" data-i18n="settings.startupDesc">Orbs démarre automatiquement à l'ouverture de session.</div>
+          </div>
+          <label class="switch"><input type="checkbox" id="optStartup"><span></span></label>
+        </div>
+
+        <div class="setting-row">
+          <div class="setting-text">
+            <div class="setting-name" data-i18n="settings.autoRefresh">Actualiser le catalogue</div>
+            <div class="setting-desc" data-i18n="settings.autoRefreshDesc">Synchronise les jeux Discord une fois par semaine.</div>
+          </div>
+          <label class="switch"><input type="checkbox" id="optAutoRefresh"><span></span></label>
+        </div>
+
+        <div class="setting-row">
+          <div class="setting-text">
+            <div class="setting-name" data-i18n="settings.fakeWindow">Fenêtre du faux processus</div>
+            <div class="setting-desc" data-i18n="settings.fakeWindowDesc">Affiche la petite fenêtre du mode processus (diagnostic).</div>
+          </div>
+          <label class="switch"><input type="checkbox" id="optFakeWindow"><span></span></label>
+        </div>
+      </div>
+
+      <div class="panel settings-panel">
+        <h3 class="panel-title" data-i18n="settings.data">Données</h3>
+        <div class="setting-row">
+          <div class="setting-text">
+            <div class="setting-name" data-i18n="settings.folder">Dossier de données</div>
+            <div class="setting-desc" id="dataPath">—</div>
+          </div>
+          <button class="btn btn--subtle" id="openFolder"><svg class="ico"><use href="#i-folder"/></svg><span data-i18n="settings.open">Ouvrir</span></button>
+        </div>
+        <div class="setting-row">
+          <div class="setting-text">
+            <div class="setting-name" data-i18n="settings.history">Effacer l'historique</div>
+            <div class="setting-desc" data-i18n="settings.historyDesc">Supprime la liste des jeux récemment lancés.</div>
+          </div>
+          <button class="btn btn--danger" id="clearHistory"><svg class="ico"><use href="#i-trash"/></svg><span data-i18n="settings.clear">Effacer</span></button>
+        </div>
+      </div>
+    </section>
+
+    <!-- À PROPOS -->
+    <section class="view" data-view="about">
+      <div class="about">
+        <img class="logo-mark logo-mark--about" src="assets/orbs-logo.png" alt="" aria-hidden="true">
+        <h1>Orbs <span class="tag" id="aboutVersion">v2.0.0</span></h1>
+        <p class="about-tagline" data-i18n="about.tagline">Discord Activity Studio — simule une activité de jeu crédible, pour le fun.</p>
+        <div class="about-badges">
+          <span class="pill"><svg class="ico"><use href="#i-zap"/></svg>Rich Presence</span>
+          <span class="pill"><svg class="ico"><use href="#i-grid"/></svg>25 000 jeux</span>
+          <span class="pill"><svg class="ico"><use href="#i-shield"/></svg>100 % local</span>
+        </div>
+        <p class="about-text" data-i18n="about.text">Orbs envoie une présence à l'API locale de Discord : rien n'est installé, aucun compte n'est utilisé, et l'activité disparaît dès que tu arrêtes. Les visuels et les noms proviennent des applications officielles de Discord.</p>
+
+        <div class="about-grid">
+          <div class="panel">
+            <h3 data-i18n="about.shortcuts">Raccourcis</h3>
+            <div class="kv"><span data-i18n="about.kSearch">Rechercher</span><kbd>Ctrl</kbd><kbd>K</kbd></div>
+            <div class="kv"><span data-i18n="about.kStop">Arrêter la présence</span><kbd>Ctrl</kbd><kbd>⇧</kbd><kbd>S</kbd></div>
+            <div class="kv"><span data-i18n="about.kClose">Fermer la fenêtre</span><kbd>Esc</kbd></div>
+          </div>
+          <div class="panel">
+            <h3 data-i18n="about.links">Liens</h3>
+            <button class="kv linkrow" data-url="https://discord.com/developers/applications">
+              <span data-i18n="about.devPortal">Portail développeur Discord</span><svg class="ico"><use href="#i-external"/></svg>
+            </button>
+            <button class="kv linkrow" data-url="https://support.discord.com/hc/fr/articles/217511547">
+              <span data-i18n="about.activityHelp">Aide « activité de jeu »</span><svg class="ico"><use href="#i-external"/></svg>
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </section>
+  </main>
+</div>
+
+<div id="modalRoot"></div>
+<div id="toasts" class="toasts"></div>
+
+<script src="js/i18n.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

@@ -1,105 +1,69 @@
-# Discord Fake Game for Orbs
+# Orbs — Discord Activity Studio
 
-![logo](assets/logo.png)
+[Français](#français) · [English](#english)
 
-Windows app that shows a game as “currently playing” in your Discord activity,
-without installing the game — made for Discord Orbs quests.
+## Français
 
-> ✅ **Free, no licence, no account.** Download and use it.
-> 🔒 **Not open source.** The source code is not published; only the executable
-> and its update manifest are distributed here.
+Orbs est une application de bureau Windows qui permet de parcourir un catalogue de jeux et d’afficher une activité Rich Presence dans Discord. L’interface est construite avec HTML, CSS et JavaScript, reliée à une passerelle Python via pywebview.
 
----
+### Fonctions
 
-## 🇫🇷 Français
+- Catalogue de jeux, recherche, favoris, historique récent et presets personnalisés.
+- Présence Discord via l’IPC local de Discord.
+- Outils de diagnostic pour l’IPC, la Rich Presence et le catalogue.
+- Mode expérimental de détection par processus. Il lance un exécutable système renommé et peut être bloqué par un antivirus ; la Rich Presence est le mode conseillé.
+- Lecteur expérimental de Quest Home en lecture seule avec l’accessibilité Windows. Il n’ouvre pas Discord, ne navigue pas et ne lit aucun jeton. Les résultats dépendent des textes que Discord expose à Windows et peuvent être incomplets. Quest Home doit être déjà visible dans Discord.
 
-### Deux méthodes
+### Lancer depuis les sources
 
-| Méthode | Principe | Résultat |
-|---|---|---|
-| **Rich Presence** | déclare l'activité sur l'API locale de Discord | « Joue à <jeu> » — recommandé |
-| **Faux processus** | processus au nom de l'exe du jeu + vraie fenêtre (hors écran) | détecté par Discord |
+1. Installer Python 3.10 ou plus récent et Discord pour Windows.
+2. Lancer `Installer.bat` pour installer les dépendances dans un environnement virtuel local.
+3. Lancer `Lancer.bat`.
 
-### Installation
+Le script `build_exe.bat` compile une version PyInstaller. Le dossier de sortie complet `dist-quests/Orbs` est nécessaire au lancement ; `Orbs.exe` seul n’est pas autonome.
 
-1. Télécharge `DiscordFakeGame.exe` dans [Releases](../../releases/latest).
-2. Double-clique. Windows peut afficher un avertissement SmartScreen
-   (*Informations complémentaires* → *Exécuter quand même*) : l'exécutable n'est
-   pas signé par un certificat commercial.
-3. C'est tout. Aucune clé, aucun compte, aucune inscription.
+### Données et confidentialité
 
-Discord doit être ouvert, et **Paramètres → Confidentialité et sécurité de
-l'activité → « Afficher l'activité de jeu actuelle »** doit être activé.
+En mode source, les réglages, favoris, presets, historique et cache du catalogue sont enregistrés à côté des fichiers du projet. En version compilée, ils sont stockés dans `%LOCALAPPDATA%\Orbs`. Ces fichiers peuvent contenir des préférences et l’historique d’utilisation ; ils sont ignorés par Git et ne font pas partie du dépôt public. L’application ne demande pas de mot de passe Discord et ne lit pas les jetons d’authentification.
 
-### Fonctionnalités
+La connexion Rich Presence utilise le canal IPC local de Discord. Elle ne fournit pas à Orbs l’identité du compte, les Orbs ou les quêtes. Le lecteur Quest Home est une lecture d’interface Windows distincte et expérimentale.
 
-- Recherche parmi ~25 000 jeux officiels (casse et accents ignorés, alias compris).
-- Remplissage automatique de l'ID officiel du jeu sélectionné.
-- Faux processus **sans limite de temps**, arrêt manuel.
-- **Jusqu'à 6 jeux en même temps** : un clic ajoute un jeu à la sélection, un
-  second clic le retire ; un seul bouton lance (ou arrête) la sélection.
-- **Interface bilingue** français / anglais (bouton FR/EN, mémorisé).
-- Écran de lancement animé et logo.
-- Diagnostic intégré : lit les journaux de Discord et affiche ce qu'il a
-  réellement détecté.
-- **Mises à jour automatiques** signées (SHA-256 + Ed25519).
+### Dépendances principales
 
-### Mises à jour
+Python, pywebview, Requests, Pillow et pypresence. Voir `requirements.txt` pour les dépendances Python.
 
-L'application interroge `version.json` au démarrage. Si une version plus récente
-existe, un bandeau apparaît ; le téléchargement est vérifié puis l'exe est
-remplacé et relancé. Un manifeste falsifié ou un exécutable substitué est
-**refusé**.
+## English
 
----
-
-## 🇬🇧 English
-
-### Two methods
-
-| Method | How it works | Result |
-|---|---|---|
-| **Rich Presence** | declares the activity through Discord's local API | “Playing <game>” — recommended |
-| **Fake process** | a process named after the game's exe, with a real off-screen window | detected by Discord |
-
-### Install
-
-1. Download `DiscordFakeGame.exe` from [Releases](../../releases/latest).
-2. Double-click it. Windows may show a SmartScreen warning
-   (*More info* → *Run anyway*) — the executable is not commercially signed.
-3. That's it. No key, no account, no sign-up.
-
-Discord must be running, and **Settings → Activity Privacy → “Display current
-activity as a status message”** must be enabled.
+Orbs is a Windows desktop application for browsing a game catalogue and displaying a Discord Rich Presence activity. Its interface uses HTML, CSS, and JavaScript, connected to a Python bridge through pywebview.
 
 ### Features
 
-- Search across ~25,000 official games (case- and accent-insensitive, aliases
-  included).
-- The selected game's official application ID is filled in automatically.
-- Fake process with **no time limit**, stopped manually.
-- **Up to 6 games at once**: click a game to add it, click again to remove it;
-  one button starts (or stops) the whole selection.
-- **Bilingual interface** French / English (FR/EN switch, remembered).
-- Animated splash screen and app logo.
-- Built-in diagnostics: reads Discord's logs and shows what it actually detected.
-- **Signed automatic updates** (SHA-256 + Ed25519).
+- Game catalogue, search, favourites, recent activity, and custom presets.
+- Discord Rich Presence through Discord’s local IPC interface.
+- Diagnostics for IPC, Rich Presence, and the game catalogue.
+- Experimental process-detection mode. It starts a renamed Windows system executable and may be blocked by antivirus software; Rich Presence is the recommended mode.
+- Experimental, read-only Quest Home reader using Windows UI Automation. It does not open or navigate Discord and does not read authentication tokens. Results depend on the text Discord exposes to Windows and may be incomplete. Quest Home must already be visible in Discord.
 
-### Updates
+### Run from source
 
-The app checks `version.json` at startup. If a newer version exists, a banner
-appears; the download is verified, the exe is replaced and the app restarts.
-A tampered manifest or a substituted executable is **refused**.
+1. Install Python 3.10 or newer and Discord for Windows.
+2. Run `Installer.bat` to install dependencies into a local virtual environment.
+3. Run `Lancer.bat`.
 
----
+Run `build_exe.bat` to build with PyInstaller. The complete output folder `dist-quests/Orbs` is required; `Orbs.exe` is not a standalone executable by itself.
 
-## Files in this repository / Fichiers de ce dépôt
+### Data and privacy
 
-| File | Purpose / Rôle |
-|---|---|
-| `version.json` | signed update manifest / manifeste de mise à jour signé |
-| `logo.png` | application icon / icône de l'application |
+In source mode, settings, favourites, presets, recent activity, and the game catalogue cache are stored next to the project files. In the packaged application, they are stored under `%LOCALAPPDATA%\Orbs`. These files can contain preferences and usage history; Git ignores them and they are not part of this public repository. The app does not ask for a Discord password or read authentication tokens.
 
-The application source code is **not** published here.
+Rich Presence uses Discord’s local IPC channel. It does not provide Orbs with the account identity, Orb balance, or quest data. The Quest Home reader is a separate, experimental Windows UI read.
 
-Le code source de l'application n'est **pas** publié ici.
+### Main dependencies
+
+Python, pywebview, Requests, Pillow, and pypresence. See `requirements.txt` for Python dependencies.
+
+## License / Licence
+
+The project source is released under [The Unlicense](LICENSE), which dedicates it to the public domain and includes a warranty/liability disclaimer to the extent allowed by law. Orbs is not affiliated with Discord. Users are responsible for complying with Discord's Terms of Service and applicable laws when using or redistributing the project. Third-party dependencies remain under their own licenses.
+
+Le code source est publié sous [The Unlicense](LICENSE), qui le dédie au domaine public et inclut une exclusion de garantie et de responsabilité dans la mesure permise par la loi. Orbs n’est pas affilié à Discord. Chaque personne reste responsable du respect des Conditions d’utilisation de Discord et des lois applicables lors de l’utilisation ou de la redistribution du projet. Les dépendances tierces conservent leurs propres licences.

@@ -1,0 +1,33 @@
+# Python and build output
+__pycache__/
+*.py[cod]
+.venv*/
+build/
+build-*/
+dist/
+dist-*/
+Orbs.spec
+
+# Local application data and logs (never commit account activity)
+settings.json
+favorites.json
+recents.json
+presets.json
+discord_games_cache.json
+fake_processes/
+*.log
+probe.*
+
+# Local backups and one-off maintenance scripts
+*.bak-*
+tools_check_encoding.py
+tools_fix_encoding.py
+
+# Editors and OS metadata
+.vscode/
+.idea/
+Thumbs.db
+.DS_Store
+
+# Local release archives
+/release/
