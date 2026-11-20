@@ -3,10 +3,14 @@
 [Français](#français) · [English](#english)
 
 > **Release note:** the pre-existing v1.x GitHub releases still point to the old app. Download the current packaged build from [Orbs-Windows-x64.zip](https://github.com/stayanowas/discord-fake-game-for-orbs/blob/main/release/Orbs-Windows-x64.zip). Extract the folder before launching `Orbs.exe`.
+>
+> **License:** this current source and package use PolyForm Noncommercial 1.0.0. Earlier v1.x releases and commits were published under The Unlicense; these new terms do not retroactively change permissions already granted for those copies.
 
 ## Français
 
 > **Note de publication :** les anciennes releases GitHub v1.x correspondent encore à l’ancienne application. Télécharge le paquet actuel [Orbs-Windows-x64.zip](https://github.com/stayanowas/discord-fake-game-for-orbs/blob/main/release/Orbs-Windows-x64.zip) et extrais le dossier avant de lancer `Orbs.exe`.
+>
+> **Licence :** le code et le paquet actuels utilisent PolyForm Noncommercial 1.0.0. Les anciennes releases et commits v1.x ont été publiés sous The Unlicense ; ces nouvelles conditions ne modifient pas rétroactivement les permissions déjà accordées pour ces copies.
 
 Orbs est une application de bureau Windows qui permet de parcourir un catalogue de jeux et d’afficher une activité Rich Presence dans Discord. L’interface est construite avec HTML, CSS et JavaScript, reliée à une passerelle Python via pywebview.
 
@@ -68,6 +72,6 @@ Python, pywebview, Requests, Pillow, and pypresence. See `requirements.txt` for 
 
 ## License / Licence
 
-The project source is released under [The Unlicense](LICENSE), which dedicates it to the public domain and includes a warranty/liability disclaimer to the extent allowed by law. Orbs is not affiliated with Discord. Users are responsible for complying with Discord's Terms of Service and applicable laws when using or redistributing the project. Third-party dependencies remain under their own licenses.
+The current project source is released under [PolyForm Noncommercial 1.0.0](LICENSE). Commercial use is not permitted by this license; personal and other noncommercial uses, including modification and redistribution, are subject to its terms. This is source-available software, not OSI-defined open source. Earlier v1.x releases and commits used The Unlicense, and this license change does not retroactively revoke permissions already granted for those copies. Orbs is not affiliated with Discord. Users are responsible for complying with Discord's Terms of Service and applicable laws. Third-party dependencies remain under their own licenses.
 
-Le code source est publié sous [The Unlicense](LICENSE), qui le dédie au domaine public et inclut une exclusion de garantie et de responsabilité dans la mesure permise par la loi. Orbs n’est pas affilié à Discord. Chaque personne reste responsable du respect des Conditions d’utilisation de Discord et des lois applicables lors de l’utilisation ou de la redistribution du projet. Les dépendances tierces conservent leurs propres licences.
+Le code actuel est publié sous [PolyForm Noncommercial 1.0.0](LICENSE). L’usage commercial n’est pas permis par cette licence ; les usages personnels et autres usages non commerciaux, y compris les modifications et redistributions, restent soumis à ses conditions. Il s’agit d’un logiciel à code source disponible, pas d’un logiciel open source au sens de l’OSI. Les anciennes releases et commits v1.x utilisaient The Unlicense ; ce changement ne révoque pas rétroactivement les permissions déjà accordées pour ces copies. Orbs n’est pas affilié à Discord. Chacun reste responsable du respect des Conditions d’utilisation de Discord et des lois applicables. Les dépendances tierces gardent leurs propres licences.
