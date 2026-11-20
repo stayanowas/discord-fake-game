@@ -2,7 +2,11 @@
 
 [Français](#français) · [English](#english)
 
+> **Release note:** the pre-existing v1.x GitHub releases still point to the old app. The current Orbs Windows package has not been uploaded yet.
+
 ## Français
+
+> **Note de publication :** les anciennes releases GitHub v1.x correspondent encore à l’ancienne application. Le paquet Windows Orbs actuel n’a pas encore été téléversé.
 
 Orbs est une application de bureau Windows qui permet de parcourir un catalogue de jeux et d’afficher une activité Rich Presence dans Discord. L’interface est construite avec HTML, CSS et JavaScript, reliée à une passerelle Python via pywebview.
 
