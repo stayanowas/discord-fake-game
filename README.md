@@ -2,11 +2,11 @@
 
 [Français](#français) · [English](#english)
 
-> **Release note:** the pre-existing v1.x GitHub releases still point to the old app. The current Orbs Windows package has not been uploaded yet.
+> **Release note:** the pre-existing v1.x GitHub releases still point to the old app. Download the current packaged build from [Orbs-Windows-x64.zip](https://github.com/stayanowas/discord-fake-game-for-orbs/blob/main/release/Orbs-Windows-x64.zip). Extract the folder before launching `Orbs.exe`.
 
 ## Français
 
-> **Note de publication :** les anciennes releases GitHub v1.x correspondent encore à l’ancienne application. Le paquet Windows Orbs actuel n’a pas encore été téléversé.
+> **Note de publication :** les anciennes releases GitHub v1.x correspondent encore à l’ancienne application. Télécharge le paquet actuel [Orbs-Windows-x64.zip](https://github.com/stayanowas/discord-fake-game-for-orbs/blob/main/release/Orbs-Windows-x64.zip) et extrais le dossier avant de lancer `Orbs.exe`.
 
 Orbs est une application de bureau Windows qui permet de parcourir un catalogue de jeux et d’afficher une activité Rich Presence dans Discord. L’interface est construite avec HTML, CSS et JavaScript, reliée à une passerelle Python via pywebview.
 
