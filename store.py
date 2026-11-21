@@ -25,6 +25,7 @@ DEFAULTS: dict[str, Any] = {
     "reduced_motion": False,
     "show_fake_window": False,
     "default_method": "rpc",
+    "playtime_hours": 0,
     "window": {"width": 1280, "height": 820},
     "onboarded": False,
 }

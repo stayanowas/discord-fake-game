@@ -347,6 +347,8 @@ class Bridge:
         state = (payload.get("state") or "").strip()
         large_image = (payload.get("largeImage") or "").strip()
         large_text = (payload.get("largeText") or "").strip()
+        playtime_hours = max(0, min(87600, int(self.settings.get("playtime_hours") or 0)))
+        started = _now() - playtime_hours * 3600
 
         if method == "process":
             return self._launch_process(payload)
@@ -360,10 +362,10 @@ class Bridge:
             ok, message = self.rpc.set_presence(
                 details=details or "En jeu", state=state or None,
                 large_image=large_image or None, large_text=large_text or None,
-                start_time=int(self.running.get("started") or _now()),
+                start_time=started,
             )
             if ok:
-                self._update_running(details=details, state=state)
+                self._update_running(details=details, state=state, started=started)
                 return {"ok": True, "code": "updated", "running": self._running_state()}
             return {"ok": False, "code": "rpc_error", "message": message}
 
@@ -379,7 +381,7 @@ class Bridge:
             state=state or None,
             large_image=large_image or None,
             large_text=large_text or None,
-            start_time=_now(),
+            start_time=started,
         )
         if not ok:
             self.rpc.disconnect()
@@ -399,7 +401,7 @@ class Bridge:
             "state": state,
             "icon": cover,
             "banner": banner,
-            "started": _now(),
+            "started": started,
         }
         self._remember(game, name, payload)
         self._log(f"Rich Presence lancée : {name} (ID {app_id}).")
@@ -539,6 +541,11 @@ class Bridge:
             merged["lang"] = "fr"
         if merged.get("accent") not in _ACCENTS:
             merged["accent"] = "blurple"
+
+        try:
+            merged["playtime_hours"] = max(0, min(87600, int(merged.get("playtime_hours") or 0)))
+        except (TypeError, ValueError, OverflowError):
+            merged["playtime_hours"] = 0
 
         startup = bool(merged.get("start_with_windows"))
         if startup != store.startup_enabled():

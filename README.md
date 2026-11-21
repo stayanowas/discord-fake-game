@@ -18,6 +18,7 @@ Orbs est une application de bureau Windows qui permet de parcourir un catalogue 
 
 - Catalogue de jeux, recherche, favoris, historique récent et presets personnalisés.
 - Présence Discord via l’IPC local de Discord.
+- Réglage de la durée déjà écoulée affichée par la présence, en heures (0 garde le chronomètre réel).
 - Outils de diagnostic pour l’IPC, la Rich Presence et le catalogue.
 - Mode expérimental de détection par processus. Il lance un exécutable système renommé et peut être bloqué par un antivirus ; la Rich Presence est le mode conseillé.
 - Lecteur expérimental de Quest Home en lecture seule avec l’accessibilité Windows. Il n’ouvre pas Discord, ne navigue pas et ne lit aucun jeton. Les résultats dépendent des textes que Discord expose à Windows et peuvent être incomplets. Quest Home doit être déjà visible dans Discord.
@@ -48,6 +49,7 @@ Orbs is a Windows desktop application for browsing a game catalogue and displayi
 
 - Game catalogue, search, favourites, recent activity, and custom presets.
 - Discord Rich Presence through Discord’s local IPC interface.
+- A setting for the elapsed time shown by Rich Presence, in hours (0 keeps the real start time).
 - Diagnostics for IPC, Rich Presence, and the game catalogue.
 - Experimental process-detection mode. It starts a renamed Windows system executable and may be blocked by antivirus software; Rich Presence is the recommended mode.
 - Experimental, read-only Quest Home reader using Windows UI Automation. It does not open or navigate Discord and does not read authentication tokens. Results depend on the text Discord exposes to Windows and may be incomplete. Quest Home must already be visible in Discord.

@@ -251,7 +251,10 @@ function tickTimer() {
     timer.textContent = fmtTime(elapsed);
   }
   const pv = $("#pvTime");
-  if (pv) pv.textContent = fmtTime(state.tick);
+  if (pv) {
+    const hours = Math.max(0, Math.min(87600, Number(state.settings.playtime_hours) || 0));
+    pv.textContent = fmtTime(hours * 3600 + state.tick);
+  }
 }
 
 /* ─────────────────────────── Récents ─────────────────────────── */
@@ -815,6 +818,8 @@ function syncSettingsUI() {
   set("optStartup", s.start_with_windows);
   set("optAutoRefresh", s.auto_refresh);
   set("optFakeWindow", s.show_fake_window);
+  const playtime = document.getElementById("optPlaytimeHours");
+  if (playtime) playtime.value = String(Math.max(0, Math.min(87600, Number(s.playtime_hours) || 0)));
   const path = $("#dataPath");
   if (path && state.dataDir) path.textContent = state.dataDir;
 }
@@ -867,6 +872,13 @@ function bindSettings() {
       }
     };
   });
+
+  const playtimeInput = $("#optPlaytimeHours");
+  playtimeInput.onchange = async () => {
+    const requested = Number(playtimeInput.value);
+    const hours = Number.isFinite(requested) ? Math.max(0, Math.min(87600, Math.floor(requested))) : 0;
+    await saveSettings({ playtime_hours: hours }, false);
+  };
 
   $("#openFolder").onclick = () => api("open_data_folder");
   $("#clearHistory").onclick = async () => {

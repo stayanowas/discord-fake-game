@@ -433,6 +433,17 @@
 
         <div class="setting-row">
           <div class="setting-text">
+            <div class="setting-name" id="playtimeSettingName" data-i18n="settings.playtime">Temps affiché</div>
+            <div class="setting-desc" data-i18n="settings.playtimeDesc">Heures déjà écoulées au lancement d'une présence Discord. 0 = démarrer à maintenant.</div>
+          </div>
+          <label class="setting-number" aria-labelledby="playtimeSettingName">
+            <input type="number" id="optPlaytimeHours" min="0" max="87600" step="1" inputmode="numeric" value="0">
+            <span data-i18n="settings.hours">h</span>
+          </label>
+        </div>
+
+        <div class="setting-row">
+          <div class="setting-text">
             <div class="setting-name" data-i18n="settings.startup">Lancer avec Windows</div>
             <div class="setting-desc" data-i18n="settings.startupDesc">Orbs démarre automatiquement à l'ouverture de session.</div>
           </div>
