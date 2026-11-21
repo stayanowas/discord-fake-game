@@ -2,13 +2,13 @@
 
 [Français](#français) · [English](#english)
 
-> **Release note:** the pre-existing v1.x GitHub releases still point to the old app. Download the current packaged build from [Orbs-Windows-x64.zip](https://github.com/stayanowas/discord-fake-game-for-orbs/blob/main/release/Orbs-Windows-x64.zip). Extract the folder before launching `Orbs.exe`.
+> **Release note:** the pre-existing v1.x GitHub releases still point to the old app. Download the current packaged build from [Orbs-Windows-x64.zip](https://github.com/stayanowas/discord-fake-game/blob/main/release/Orbs-Windows-x64.zip). Extract the folder before launching `Orbs.exe`.
 >
 > **License:** this current source and package use PolyForm Noncommercial 1.0.0. Earlier v1.x releases and commits were published under The Unlicense; these new terms do not retroactively change permissions already granted for those copies.
 
 ## Français
 
-> **Note de publication :** les anciennes releases GitHub v1.x correspondent encore à l’ancienne application. Télécharge le paquet actuel [Orbs-Windows-x64.zip](https://github.com/stayanowas/discord-fake-game-for-orbs/blob/main/release/Orbs-Windows-x64.zip) et extrais le dossier avant de lancer `Orbs.exe`.
+> **Note de publication :** les anciennes releases GitHub v1.x correspondent encore à l’ancienne application. Télécharge le paquet actuel [Orbs-Windows-x64.zip](https://github.com/stayanowas/discord-fake-game/blob/main/release/Orbs-Windows-x64.zip) et extrais le dossier avant de lancer `Orbs.exe`.
 >
 > **Licence :** le code et le paquet actuels utilisent PolyForm Noncommercial 1.0.0. Les anciennes releases et commits v1.x ont été publiés sous The Unlicense ; ces nouvelles conditions ne modifient pas rétroactivement les permissions déjà accordées pour ces copies.
 
