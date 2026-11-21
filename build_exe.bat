@@ -13,7 +13,21 @@ where py >nul 2>&1
 if not errorlevel 1 (
     for /f "delims=" %%i in ('py -3 -c "import sys;print(sys.executable)" 2^>nul') do set "PYTHON=%%i"
 )
+rem Le lanceur py peut exister sans connaître un Python installé hors registre.
+if not defined PYTHON (
+    for %%V in (314 313 312 311 310) do (
+        if not defined PYTHON if exist "%LocalAppData%\Programs\Python\Python%%V\python.exe" set "PYTHON=%LocalAppData%\Programs\Python\Python%%V\python.exe"
+    )
+)
+if not defined PYTHON (
+    for /f "delims=" %%i in ('where python 2^>nul') do if not defined PYTHON set "PYTHON=%%i"
+)
 if not defined PYTHON set "PYTHON=python"
+"%PYTHON%" --version >nul 2>&1
+if errorlevel 1 (
+    echo Python 3 n'a pas ete trouve. Installe Python puis relance ce script.
+    goto :error
+)
 
 rem ── Environnement isolé ─────────────────────────────────────────────
 if not exist ".venv-build\Scripts\python.exe" (

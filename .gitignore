@@ -2,6 +2,8 @@
 __pycache__/
 *.py[cod]
 .venv*/
+.tmp-build/
+.pip-cache/
 build/
 build-*/
 dist/

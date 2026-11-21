@@ -17,6 +17,38 @@ import os
 import sys
 import threading
 import time
+from pathlib import Path
+
+
+def _unblock_bundled_dotnet_assemblies() -> None:
+    """Allow .NET to load bundled DLLs extracted from a downloaded ZIP.
+
+    Windows Explorer can propagate the ZIP's Mark of the Web to extracted
+    files. .NET Framework then refuses Python.Runtime.dll before pywebview can
+    create its window. Clear that alternate data stream from the app's own
+    bundled DLLs before importing pywebview (and therefore pythonnet).
+    """
+    if os.name != "nt" or not getattr(sys, "frozen", False):
+        return
+
+    bundle_dir = Path(getattr(sys, "_MEIPASS", Path(__file__).resolve().parent))
+    try:
+        dlls = bundle_dir.rglob("*.dll")
+        for dll in dlls:
+            try:
+                os.remove(f"{dll}:Zone.Identifier")
+            except FileNotFoundError:
+                pass
+            except OSError:
+                # A missing or inaccessible marker must not prevent startup;
+                # pythonnet will report a useful error if Windows still blocks
+                # the assembly when it is imported below.
+                pass
+    except OSError:
+        pass
+
+
+_unblock_bundled_dotnet_assemblies()
 
 import webview
 

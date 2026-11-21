@@ -28,7 +28,7 @@ Orbs est une application de bureau Windows qui permet de parcourir un catalogue 
 2. Lancer `Installer.bat` pour installer les dépendances dans un environnement virtuel local.
 3. Lancer `Lancer.bat`.
 
-Le script `build_exe.bat` compile une version PyInstaller. Le dossier de sortie complet `dist-quests/Orbs` est nécessaire au lancement ; `Orbs.exe` seul n’est pas autonome.
+Le script `build_exe.bat` compile une version PyInstaller. Le dossier de sortie complet `dist-quests/Orbs` est nécessaire au lancement ; `Orbs.exe` seul n’est pas autonome. Au démarrage, l’application retire le marqueur Windows « fichier téléchargé depuis Internet » des DLL embarquées avant de charger pywebview, afin d’éviter l’erreur .NET `Python.Runtime.Loader.Initialize` qui peut arriver après l’extraction d’un ZIP téléchargé. Si Windows bloque encore les fichiers, débloque le ZIP dans ses propriétés puis extrais-le à nouveau.
 
 ### Données et confidentialité
 
@@ -58,7 +58,7 @@ Orbs is a Windows desktop application for browsing a game catalogue and displayi
 2. Run `Installer.bat` to install dependencies into a local virtual environment.
 3. Run `Lancer.bat`.
 
-Run `build_exe.bat` to build with PyInstaller. The complete output folder `dist-quests/Orbs` is required; `Orbs.exe` is not a standalone executable by itself.
+Run `build_exe.bat` to build with PyInstaller. The complete output folder `dist-quests/Orbs` is required; `Orbs.exe` is not a standalone executable by itself. On startup, the app removes Windows' downloaded-file marker from bundled DLLs before loading pywebview, avoiding the .NET `Python.Runtime.Loader.Initialize` error that can occur after extracting a downloaded ZIP. If Windows still blocks the files, unblock the ZIP in its Properties dialog and extract it again.
 
 ### Data and privacy
 
