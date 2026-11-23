@@ -313,7 +313,8 @@ function cardHTML(g) {
   const hue = hashHue(g.name);
   const hasArt = !!g.steam && !!g.portrait;
   const fav = state.favorites.has(String(g.id)) || g.fav;
-  const isRunning = state.runningGames.some((item) => String(item.gameId) === String(g.id));
+  const isRunning = state.runningGames.some((item) => String(item.gameId) === String(g.id)) ||
+    (state.running && state.running.kind === "rpc" && String(state.running.gameId) === String(g.id));
   const exe = g.exe || "";
   const coverInner = hasArt
     ? `<img class="art" loading="lazy" decoding="async" src="${esc(g.portrait)}" alt="" onerror="cardImgError(this)">
@@ -451,6 +452,7 @@ function openGame(g) {
   const fav = state.favorites.has(String(g.id)) || g.fav;
   const heroArt = g.banner && g.steam;
   const isRunning = state.runningGames.some((item) => String(item.gameId) === String(g.id));
+  const rpcRunning = state.running && state.running.kind === "rpc" && String(state.running.gameId) === String(g.id);
   const root = $("#modalRoot");
   root.innerHTML = `
     <div class="modal-backdrop" data-close="1">
@@ -482,7 +484,7 @@ function openGame(g) {
           </div>
           <div class="detail-actions">
             ${g.exe ? `<button class="btn btn--primary" id="mLaunch">${icon("cpu")}<span>${isRunning ? t("common.stop") : t("detail.process")}</span></button>` : ""}
-            <button class="btn ${g.exe ? "btn--ghost" : "btn--primary"}" id="mPresence">${icon("play")}<span>${t("detail.launch")}</span></button>
+            <button class="btn ${g.exe ? "btn--ghost" : "btn--primary"}" id="mPresence">${icon(rpcRunning ? "stop" : "play")}<span>${t(rpcRunning ? "common.stop" : "detail.launch")}</span></button>
             <button class="iconbtn ${fav ? "is-fav" : ""}" id="mFav" title="${t("detail.fav")}" style="${fav ? "color:#ffd36b;border-color:rgba(255,211,107,.35)" : ""}">${icon("star")}</button>
           </div>
           <p class="detail-hint">${g.exe ? `${t("detail.exe")} : <b>${esc(g.exe)}</b> — ` : ""}${g.exe ? t("detail.hint") : t("detail.noExe")}</p>
@@ -506,7 +508,7 @@ function openGame(g) {
     method: "process", gameId: g.id, name: g.name, exe: g.exe,
     icon: g.icon, banner: g.banner,
   });
-  $("#mPresence").onclick = () => launch({
+  $("#mPresence").onclick = () => rpcRunning ? stopPresence() : launch({
     method: "rpc", gameId: g.id, appId: g.id, name: g.name,
     details: $("#mDetails").value.trim(), state: $("#mState").value.trim(),
     icon: g.icon, banner: g.banner,
@@ -543,7 +545,7 @@ async function launch(payload) {
   renderNowPlaying();
   closeModal();
   const label = payload.name || "—";
-  toast(res.code === "stopped" ? t("toast.stopped") : t("toast.started"), label, "ok");
+  toast(res.code === "stopped" ? t("toast.stopped") : res.code === "process_started" ? t("toast.processStarted") : t("toast.started"), label, "ok");
   await refreshRecents();
 }
 
@@ -556,6 +558,8 @@ async function quickLaunch(id) {
   }
   if (g.exe) {
     await launch({ method: "process", gameId: g.id, name: g.name, exe: g.exe, icon: g.icon, banner: g.banner });
+  } else if (state.running && state.running.kind === "rpc" && String(state.running.gameId) === String(g.id)) {
+    await stopPresence();
   } else {
     await launch({ method: "rpc", gameId: g.id, appId: g.id, name: g.name,
       details: "", state: "", icon: g.icon, banner: g.banner });
