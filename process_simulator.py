@@ -97,6 +97,7 @@ _VBS_TEMPLATE = 'MsgBox "Discord Fake Game", 64, "Discord Fake Game"\n'
 # Petit fichier de suivi, pour pouvoir tuer un processus laissé par une session
 # précédente (utile maintenant que le processus n'a plus de limite de temps).
 _PID_FILE = FAKE_DIR / ".running.json"
+_PID_LOCK = threading.RLock()
 
 
 # ─────────────────────────── Utilitaires ──────────────────────────
@@ -177,58 +178,83 @@ def image_is_running(image_name: str) -> bool:
     return (image_name or "").lower() in list_running_images()
 
 
-def _save_running(pid: int, exe_name: str) -> None:
-    """Mémorise le processus lancé (permet de le tuer au prochain démarrage)."""
+def _read_running_records() -> list[dict[str, object]]:
+    try:
+        raw = json.loads(_PID_FILE.read_text(encoding="utf-8"))
+    except Exception:
+        return []
+    if isinstance(raw, dict):
+        raw = [raw]  # Compatibilité avec le format historique (un seul PID).
+    if not isinstance(raw, list):
+        return []
+    return [item for item in raw if isinstance(item, dict)]
+
+
+def _write_running_records(records: list[dict[str, object]]) -> None:
     try:
         FAKE_DIR.mkdir(parents=True, exist_ok=True)
-        _PID_FILE.write_text(json.dumps({"pid": pid, "exe": exe_name.lower()}),
-                             encoding="utf-8")
+        if records:
+            _PID_FILE.write_text(json.dumps(records), encoding="utf-8")
+        else:
+            _PID_FILE.unlink(missing_ok=True)
     except Exception:
         pass
+
+
+def _save_running(pid: int, exe_name: str) -> None:
+    """Mémorise chaque processus pour pouvoir tous les arrêter au prochain démarrage."""
+    with _PID_LOCK:
+        records = [record for record in _read_running_records()
+                   if int(record.get("pid") or 0) != pid]
+        records.append({"pid": pid, "exe": exe_name.lower()})
+        _write_running_records(records)
+
+
+def _remove_running(pid: int | None) -> None:
+    if not pid:
+        return
+    with _PID_LOCK:
+        records = [record for record in _read_running_records()
+                   if int(record.get("pid") or 0) != pid]
+        _write_running_records(records)
 
 
 def _clear_running() -> None:
-    try:
-        _PID_FILE.unlink(missing_ok=True)
-    except Exception:
-        pass
+    with _PID_LOCK:
+        _write_running_records([])
 
 
 def _kill_previous() -> str | None:
-    """
-    Tue le processus laissé par une session précédente (fermeture brutale de
-    l'application). Sans cela, un processus sans limite de temps resterait actif
-    indéfiniment, invisible, en continuant d'afficher le jeu.
-    """
-    if not _PID_FILE.exists():
-        return None
-    try:
-        data = json.loads(_PID_FILE.read_text(encoding="utf-8"))
-        pid = int(data.get("pid") or 0)
-        exe = str(data.get("exe") or "").lower()
-    except Exception:
-        _clear_running()
-        return None
-
-    killed: str | None = None
-    if pid and exe:
+    """Tue tous les processus résiduels laissés par une session précédente."""
+    with _PID_LOCK:
+        records = _read_running_records()
+        _write_running_records([])
+    killed: list[str] = []
+    for record in records:
+        try:
+            pid = int(record.get("pid") or 0)
+            exe = str(record.get("exe") or "").lower()
+        except (TypeError, ValueError):
+            continue
+        if not pid or not exe:
+            continue
         try:
             listing = subprocess.run(
                 ["tasklist", "/FI", f"PID eq {pid}", "/FO", "CSV", "/NH"],
                 capture_output=True, text=True, timeout=10,
                 creationflags=getattr(subprocess, "CREATE_NO_WINDOW", 0x08000000),
             ).stdout.lower()
-            # On vérifie le nom d'image pour ne pas tuer un PID recyclé.
+            # Vérifie le nom d'image afin de ne pas tuer un PID recyclé.
             if exe in listing:
                 subprocess.run(["taskkill", "/PID", str(pid), "/F", "/T"],
                                capture_output=True, timeout=10,
                                creationflags=getattr(subprocess, "CREATE_NO_WINDOW", 0x08000000))
-                killed = f"Processus résiduel « {exe} » (PID {pid}) arrêté."
+                killed.append(f"{exe} (PID {pid})")
         except Exception:
-            pass
-
-    _clear_running()
-    return killed
+            continue
+    if not killed:
+        return None
+    return "Processus résiduels arrêtés : " + ", ".join(killed) + "."
 
 
 def cleanup_orphans() -> int:
@@ -272,6 +298,7 @@ class FakeProcess:
                  visible_window: bool = False):
         self.relative_path = sanitize_relative_path(exe_name)
         self.exe_name = os.path.basename(self.relative_path)
+        self.instance_id = uuid.uuid4().hex
 
         # duration_minutes = None (ou 0) → aucune limite : le processus tourne
         # jusqu'à ce que l'utilisateur clique sur « Arrêter ».
@@ -372,7 +399,9 @@ class FakeProcess:
 
             try:
                 FAKE_DIR.mkdir(parents=True, exist_ok=True)
-                self._target_path = FAKE_DIR / self.relative_path
+                # Chaque instance utilise son propre dossier, même si deux jeux
+                # partagent le même nom d’exécutable.
+                self._target_path = FAKE_DIR / self.instance_id / self.relative_path
                 self._target_path.parent.mkdir(parents=True, exist_ok=True)
 
                 if self._target_path.exists():
@@ -445,7 +474,7 @@ class FakeProcess:
                     self.exit_reason = (f"Le processus « {self.exe_name} » s'est arrêté "
                                         f"tout seul (code {code}).")
                     self._cancel_timer()
-                    _clear_running()
+                    _remove_running(process.pid)
                     self._cleanup_files()
                 if callable(self.on_exit):
                     try:
@@ -469,7 +498,7 @@ class FakeProcess:
             was_running = self.running
             self.running = False
             self._cancel_timer()
-            _clear_running()
+            process_pid = self.process.pid if self.process else None
 
             if self.process:
                 try:
@@ -486,6 +515,7 @@ class FakeProcess:
                     pass
                 self.process = None
 
+            _remove_running(process_pid)
             self._cleanup_files()
             self.started_at = None
 
