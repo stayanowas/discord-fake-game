@@ -313,9 +313,9 @@ function cardHTML(g) {
   const hue = hashHue(g.name);
   const hasArt = !!g.steam && !!g.portrait;
   const fav = state.favorites.has(String(g.id)) || g.fav;
-  const isRunning = state.runningGames.some((item) => String(item.gameId) === String(g.id)) ||
-    (state.running && state.running.kind === "rpc" && String(state.running.gameId) === String(g.id));
   const exe = g.exe || "";
+  const isRunning = state.runningGames.some((item) => String(item.gameId) === String(g.id)) ||
+    (!exe && state.running && state.running.kind === "rpc" && String(state.running.gameId) === String(g.id));
   const coverInner = hasArt
     ? `<img class="art" loading="lazy" decoding="async" src="${esc(g.portrait)}" alt="" onerror="cardImgError(this)">
        <img class="icon" src="${esc(g.icon || "")}" alt="" style="display:none" onerror="this.remove()">`
