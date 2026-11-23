@@ -32,6 +32,7 @@ const state = {
   discord: { running: false, ipc: false, pipes: [] },
   library: { state: "loading", count: 0, progress: 0 },
   running: null,
+  runningGames: [],
   view: "home",
   tab: "all",
   query: "",
@@ -220,36 +221,48 @@ function artHTML(item, cls = "") {
 
 function renderNowPlaying() {
   const root = $("#nowPlaying");
-  if (!state.running) { root.innerHTML = ""; return; }
-  const r = state.running;
-  const elapsed = Math.max(0, Math.floor(Date.now() / 1000) - (r.started || 0));
-  const art = r.icon
-    ? `<img src="${esc(r.icon)}" alt="">`
-    : r.banner ? `<img src="${esc(r.banner)}" alt="">` : icon("zap");
-  const detail = [r.details, r.state].filter(Boolean).join(" · ");
-  root.innerHTML = `
-    <div class="now">
-      <div class="now-art">${art}</div>
-      <div class="now-body">
-        <div class="now-kicker"><span class="pulse-dot"></span>${t("now.playing")} · ${
-          r.kind === "process" ? t("now.method.process") : t("now.method.rpc")}</div>
-        <div class="now-name">${esc(r.name || "—")}</div>
-        <div class="now-meta">${esc(detail || (r.appId ? "App ID " + r.appId : (r.exe || "")))}</div>
-      </div>
-      <div class="now-timer" id="nowTimer">${fmtTime(elapsed)}</div>
-      <button class="btn btn--danger" id="nowStop">${icon("stop")}<span>${t("now.stop")}</span></button>
-    </div>`;
-  const stop = $("#nowStop");
-  if (stop) stop.onclick = stopPresence;
+  const games = Array.isArray(state.runningGames) ? state.runningGames.slice() : [];
+  if (state.running && state.running.kind === "rpc") games.unshift(state.running);
+  else if (!games.length && state.running) games.push(state.running);
+  if (!games.length) { root.innerHTML = ""; return; }
+
+  root.innerHTML = games.map((r) => {
+    const elapsed = Math.max(0, Math.floor(Date.now() / 1000) - (r.started || 0));
+    const art = r.icon
+      ? `<img src="${esc(r.icon)}" alt="">`
+      : r.banner ? `<img src="${esc(r.banner)}" alt="">` : icon("zap");
+    const detail = [r.details, r.state].filter(Boolean).join(" · ");
+    const isProcess = r.kind === "process";
+    const stop = isProcess
+      ? `<button class="btn btn--danger" data-stop-game="${esc(r.gameId)}">${icon("stop")}<span>${t("now.stop")}</span></button>`
+      : `<button class="btn btn--danger" data-stop-presence="1">${icon("stop")}<span>${t("now.stop")}</span></button>`;
+    return `
+      <div class="now">
+        <div class="now-art">${art}</div>
+        <div class="now-body">
+          <div class="now-kicker"><span class="pulse-dot"></span>${t("now.playing")} · ${isProcess ? t("now.method.process") : t("now.method.rpc")}</div>
+          <div class="now-name">${esc(r.name || "—")}</div>
+          <div class="now-meta">${esc(detail || (r.appId ? "App ID " + r.appId : (r.exe || "")))}</div>
+        </div>
+        <div class="now-timer" data-now-timer data-started="${Number(r.started) || 0}">${fmtTime(elapsed)}</div>
+        ${stop}
+      </div>`;
+  }).join("");
+
+  $$("[data-stop-game]", root).forEach((button) => {
+    button.onclick = () => stopGame(button.dataset.stopGame);
+  });
+  $$("[data-stop-presence]", root).forEach((button) => {
+    button.onclick = stopPresence;
+  });
 }
 
 function tickTimer() {
   state.tick++;
-  const timer = $("#nowTimer");
-  if (timer && state.running) {
-    const elapsed = Math.max(0, Math.floor(Date.now() / 1000) - (state.running.started || 0));
-    timer.textContent = fmtTime(elapsed);
-  }
+  $$("[data-now-timer]").forEach((timer) => {
+    const started = Number(timer.dataset.started) || 0;
+    timer.textContent = fmtTime(Math.max(0, Math.floor(Date.now() / 1000) - started));
+  });
   const pv = $("#pvTime");
   if (pv) {
     const hours = Math.max(0, Math.min(87600, Number(state.settings.playtime_hours) || 0));
@@ -300,6 +313,7 @@ function cardHTML(g) {
   const hue = hashHue(g.name);
   const hasArt = !!g.steam && !!g.portrait;
   const fav = state.favorites.has(String(g.id)) || g.fav;
+  const isRunning = state.runningGames.some((item) => String(item.gameId) === String(g.id));
   const exe = g.exe || "";
   const coverInner = hasArt
     ? `<img class="art" loading="lazy" decoding="async" src="${esc(g.portrait)}" alt="" onerror="cardImgError(this)">
@@ -314,7 +328,7 @@ function cardHTML(g) {
       ${coverInner}
       <div class="card-veil"></div>
       <button class="card-fav ${fav ? "is-fav" : ""}" data-fav="${esc(g.id)}" title="${t("detail.fav")}">${icon("star")}</button>
-      <button class="card-play" data-play="${esc(g.id)}" title="${t("common.launch")}">${icon("play")}</button>
+      <button class="card-play ${isRunning ? "is-running" : ""}" data-play="${esc(g.id)}" title="${t(isRunning ? "common.stop" : "common.launch")}">${icon(isRunning ? "stop" : "play")}</button>
       <span class="card-exe ${exe ? "" : "none"}">${esc(exe || t("card.noExe"))}</span>
     </div>
     <div class="card-info">
@@ -436,6 +450,7 @@ function openGame(g) {
   const hue = hashHue(g.name);
   const fav = state.favorites.has(String(g.id)) || g.fav;
   const heroArt = g.banner && g.steam;
+  const isRunning = state.runningGames.some((item) => String(item.gameId) === String(g.id));
   const root = $("#modalRoot");
   root.innerHTML = `
     <div class="modal-backdrop" data-close="1">
@@ -466,17 +481,19 @@ function openGame(g) {
             </label>
           </div>
           <div class="detail-actions">
-            <button class="btn btn--primary" id="mLaunch">${icon("play")}<span>${t("detail.launch")}</span></button>
-            ${g.exe ? `<button class="btn btn--ghost" id="mProcess">${icon("cpu")}<span>${t("detail.process")}</span></button>` : ""}
+            ${g.exe ? `<button class="btn btn--primary" id="mLaunch">${icon("cpu")}<span>${isRunning ? t("common.stop") : t("detail.process")}</span></button>` : ""}
+            <button class="btn ${g.exe ? "btn--ghost" : "btn--primary"}" id="mPresence">${icon("play")}<span>${t("detail.launch")}</span></button>
             <button class="iconbtn ${fav ? "is-fav" : ""}" id="mFav" title="${t("detail.fav")}" style="${fav ? "color:#ffd36b;border-color:rgba(255,211,107,.35)" : ""}">${icon("star")}</button>
           </div>
-          <p class="detail-hint">${g.exe ? `${t("detail.exe")} : <b>${esc(g.exe)}</b> — ` : ""}${t("detail.hint")}</p>
+          <p class="detail-hint">${g.exe ? `${t("detail.exe")} : <b>${esc(g.exe)}</b> — ` : ""}${g.exe ? t("detail.hint") : t("detail.noExe")}</p>
         </div>
       </div>
     </div>`;
 
-  $("#modalRoot .modal-backdrop").addEventListener("click", (e) => {
-    if (e.target.dataset.close) closeModal();
+  const backdrop = $("#modalRoot .modal-backdrop");
+  backdrop.addEventListener("click", (e) => {
+    const closeTarget = e.target.closest("[data-close]");
+    if (closeTarget && (closeTarget.classList.contains("modal-close") || e.target === backdrop)) closeModal();
   });
   $("#mFav").onclick = async () => {
     await toggleFavorite(g.id);
@@ -484,19 +501,16 @@ function openGame(g) {
     $("#mFav").style.color = nowFav ? "#ffd36b" : "";
     $("#mFav").style.borderColor = nowFav ? "rgba(255,211,107,.35)" : "";
   };
-  $("#mLaunch").onclick = async () => {
-    const payload = {
-      method: "rpc", gameId: g.id, appId: g.id, name: g.name,
-      details: $("#mDetails").value.trim(),
-      state: $("#mState").value.trim(),
-      icon: g.icon, banner: g.banner,
-    };
-    await launch(payload);
-  };
-  const proc = $("#mProcess");
-  if (proc) proc.onclick = async () => {
-    await launch({ method: "process", gameId: g.id, name: g.name, exe: g.exe, icon: g.icon, banner: g.banner });
-  };
+  const processButton = $("#mLaunch");
+  if (processButton) processButton.onclick = () => launch({
+    method: "process", gameId: g.id, name: g.name, exe: g.exe,
+    icon: g.icon, banner: g.banner,
+  });
+  $("#mPresence").onclick = () => launch({
+    method: "rpc", gameId: g.id, appId: g.id, name: g.name,
+    details: $("#mDetails").value.trim(), state: $("#mState").value.trim(),
+    icon: g.icon, banner: g.banner,
+  });
 }
 
 function closeModal() {
@@ -516,7 +530,7 @@ async function ensureDiscord() {
 }
 
 async function launch(payload) {
-  if (!(await ensureDiscord())) return;
+  if (payload.method !== "process" && !(await ensureDiscord())) return;
   const res = await api("launch", payload);
   if (!res || !res.ok) {
     const code = res && res.code;
@@ -525,25 +539,43 @@ async function launch(payload) {
     return;
   }
   state.running = res.running || null;
+  state.runningGames = res.runningGames || state.runningGames;
   renderNowPlaying();
   closeModal();
   const label = payload.name || "—";
-  toast(t("toast.started"), label, "ok");
+  toast(res.code === "stopped" ? t("toast.stopped") : t("toast.started"), label, "ok");
   await refreshRecents();
 }
 
 async function quickLaunch(id) {
   const g = state.items.find((x) => String(x.id) === String(id));
   if (!g) return;
-  await launch({
-    method: "rpc", gameId: g.id, appId: g.id, name: g.name,
-    details: "", state: "", icon: g.icon, banner: g.banner,
-  });
+  if (state.runningGames.some((item) => String(item.gameId) === String(g.id))) {
+    await stopGame(g.id);
+    return;
+  }
+  if (g.exe) {
+    await launch({ method: "process", gameId: g.id, name: g.name, exe: g.exe, icon: g.icon, banner: g.banner });
+  } else {
+    await launch({ method: "rpc", gameId: g.id, appId: g.id, name: g.name,
+      details: "", state: "", icon: g.icon, banner: g.banner });
+  }
+}
+
+async function stopGame(gameId) {
+  const res = await api("stop_game", String(gameId));
+  if (!res || !res.ok) return;
+  state.running = res.running || null;
+  state.runningGames = res.runningGames || [];
+  renderNowPlaying();
+  if (state.selected && String(state.selected.id) === String(gameId)) closeModal();
+  toast(t("toast.stopped"), res.message || "", "ok");
 }
 
 async function stopPresence() {
   const res = await api("stop_presence");
-  state.running = null;
+  state.running = res && res.running || null;
+  state.runningGames = res && res.runningGames || state.runningGames;
   renderNowPlaying();
   toast(t("toast.stopped"), res && res.message ? res.message : "", "ok");
 }
@@ -552,6 +584,7 @@ async function refreshRecents() {
   const res = await api("status");
   if (!res) return;
   state.running = res.running;
+  state.runningGames = res.runningGames || [];
   renderNowPlaying();
   state.counts.recents = (res.counts && res.counts.recents) || state.counts.recents;
   updateCounts();
@@ -969,6 +1002,7 @@ async function boot() {
   state.discord = res.discord || state.discord;
   state.library = res.library || state.library;
   state.running = res.running || null;
+  state.runningGames = res.runningGames || [];
   state.dataDir = res.dataDir || "";
   $("#versionTag").textContent = "v" + String(res.version || "2.0").split(".").slice(0, 2).join(".");
   $("#aboutVersion").textContent = "v" + (res.version || "2.0.0");
@@ -1139,8 +1173,10 @@ async function pollStatus() {
       state.running.started === res.running.started &&
       state.running.kind === res.running.kind &&
       state.running.name === res.running.name;
+    const oldGames = JSON.stringify(state.runningGames);
     state.running = res.running;
-    if (!same) renderNowPlaying();
+    state.runningGames = res.runningGames || [];
+    if (!same || oldGames !== JSON.stringify(state.runningGames)) renderNowPlaying();
     updateCounts();
   } finally {
     polling = false;
