@@ -214,7 +214,7 @@ class Bridge:
     def _running_games(self) -> list[dict[str, Any]]:
         """Renvoie l'état de tous les faux jeux actifs."""
         games = []
-        for game_id, (fake, info) in self.fakes.items():
+        for game_id, (fake, info) in list(self.fakes.items()):
             if not fake.running:
                 continue
             games.append({**info, "gameId": game_id, "kind": "process",
