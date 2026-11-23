@@ -544,6 +544,7 @@ h3 { font-size: 14px; margin: 0; }
 @keyframes floatCard { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-7px); } }
 
 /* ─────────────────────────── En cours ─────────────────────────── */
+#nowPlaying { display: grid; gap: 10px; margin-bottom: 20px; }
 .now {
   display: flex;
   align-items: center;
@@ -554,7 +555,7 @@ h3 { font-size: 14px; margin: 0; }
   background:
     linear-gradient(90deg, rgba(var(--accent-rgb), .12), transparent 55%),
     var(--panel);
-  margin-bottom: 20px;
+  margin-bottom: 0;
   animation: viewIn .3s var(--ease);
 }
 .now-art {
@@ -817,8 +818,10 @@ h3 { font-size: 14px; margin: 0; }
   transition: opacity .18s, transform .18s var(--ease);
 }
 .card-play .ico { width: 19px; height: 19px; fill: currentColor; stroke: none; margin-left: 2px; }
-.game-card:hover .card-play { opacity: 1; transform: none; }
+.game-card:hover .card-play, .card-play.is-running { opacity: 1; transform: none; }
 .card-play:hover { filter: brightness(1.1); }
+.card-play.is-running { background: rgba(239, 68, 68, .9); border-color: rgba(255, 255, 255, .45); box-shadow: 0 10px 24px rgba(0,0,0,.5), 0 0 20px rgba(239,68,68,.35); }
+.card-play.is-running .ico { margin-left: 0; }
 
 .card-exe {
   position: absolute;
