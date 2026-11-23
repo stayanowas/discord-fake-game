@@ -214,7 +214,9 @@ class Bridge:
     def _running_games(self) -> list[dict[str, Any]]:
         """Renvoie l'état de tous les faux jeux actifs."""
         games = []
-        for game_id, (fake, info) in list(self.fakes.items()):
+        with self._lock:
+            active = list(self.fakes.items())
+        for game_id, (fake, info) in active:
             if not fake.running:
                 continue
             games.append({**info, "gameId": game_id, "kind": "process",
@@ -434,6 +436,9 @@ class Bridge:
             return {"ok": True, "code": "stopped", "message": "Jeu arrêté.",
                     "running": self._running_state(), "runningGames": self._running_games()}
 
+        # Le faux processus remplace la présence Discord active, tout en
+        # laissant les autres faux jeux fonctionner.
+        self.stop_presence()
         visible = bool(self.settings.get("show_fake_window"))
         fake = FakeProcess(
             exe, duration_minutes=None,
@@ -457,7 +462,8 @@ class Bridge:
             "banner": payload.get("banner") or snap.get("banner"),
             "started": _now(),
         }
-        self.fakes[game_id] = (fake, info)
+        with self._lock:
+            self.fakes[game_id] = (fake, info)
         self._remember(game, info["name"], payload)
         self._log(f"Faux processus lancé : {fake.exe_name}.")
         return {"ok": True, "code": "process_started",
@@ -474,13 +480,16 @@ class Bridge:
     def stop_game(self, game_id: str) -> dict[str, Any]:
         """Arrête un seul faux jeu, sans toucher aux autres activités."""
         key = str(game_id or "")
-        current = self.fakes.get(key)
+        with self._lock:
+            current = self.fakes.get(key)
         if not current:
             return {"ok": False, "code": "not_running",
                     "running": self._running_state(), "runningGames": self._running_games()}
         fake, info = current
         fake.stop()
-        self.fakes.pop(key, None)
+        with self._lock:
+            if self.fakes.get(key, (None,))[0] is fake:
+                self.fakes.pop(key, None)
         self._log(f"Faux processus arrêté : {info.get('name') or key}.")
         return {"ok": True, "code": "stopped", "message": "Jeu arrêté.",
                 "running": self._running_state(), "runningGames": self._running_games()}
@@ -614,7 +623,9 @@ class Bridge:
 
     def diagnostics(self) -> dict[str, Any]:
         fake_status = None
-        active_fake = next((fake for fake, _ in self.fakes.values() if fake.running), None)
+        with self._lock:
+            active_fakes = list(self.fakes.values())
+        active_fake = next((fake for fake, _ in active_fakes if fake.running), None)
         if active_fake:
             fake_status = {
                 "actif": True,
@@ -747,13 +758,16 @@ class Bridge:
                 self.rpc.disconnect()
         except Exception:
             pass
-        for fake, _ in list(self.fakes.values()):
+        with self._lock:
+            active_fakes = list(self.fakes.values())
+        for fake, _ in active_fakes:
             try:
                 if fake.running:
                     fake.stop()
             except Exception:
                 pass
-        self.fakes.clear()
+        with self._lock:
+            self.fakes.clear()
         self.running = None
         try:
             window = self._window
