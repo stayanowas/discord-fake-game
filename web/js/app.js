@@ -224,6 +224,15 @@ function renderNowPlaying() {
   const games = Array.isArray(state.runningGames) ? state.runningGames.slice() : [];
   if (state.running && state.running.kind === "rpc") games.unshift(state.running);
   else if (!games.length && state.running) games.push(state.running);
+  $("[data-play]").forEach((button) => {
+    const game = state.items.find((item) => String(item.id) === String(button.dataset.play));
+    if (!game) return;
+    const active = state.runningGames.some((item) => String(item.gameId) === String(game.id)) ||
+      (!(game.exe || "") && state.running && state.running.kind === "rpc" && String(state.running.gameId) === String(game.id));
+    button.classList.toggle("is-running", !!active);
+    button.title = t(active ? "common.stop" : "common.launch");
+    button.innerHTML = icon(active ? "stop" : "play");
+  });
   if (!games.length) { root.innerHTML = ""; return; }
 
   root.innerHTML = games.map((r) => {
